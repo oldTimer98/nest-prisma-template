@@ -6,21 +6,14 @@ services:
     container_name: app
     restart: always
     build:
-      context: .
-      dockerfile: Dockerfile
-      target: development #指定构建阶段
-      args:
-        - APP_ENV
-    command: pnpm start:dev
+      context: ./
+      dockerfile: ./Dockerfile
     env_file:
       - .env.development
     environment:
       - TZ=Asia/Shanghai
     ports:
       - 3000:3000
-    # 开发时挂载代码
-    volumes:
-      - .:/usr/src/app
     depends_on:
       - mysql
       - redis
@@ -36,9 +29,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./docker/mysql/data:/var/lib/mysql
-      - ./docker/mysql/conf:/etc/mysql/conf.d
-      - ./docker/mysql/logs:/logs
+      - E:\docker-data\mysql:/var/lib/mysql
     command:
       # 将mysql8.0默认密码策略 修改为 原先 策略 (mysql8.0对其默认策略做了更改 会导致密码无法匹配)
       # Modify the Mysql 8.0 default password strategy to the original strategy (MySQL8.0 to change its default strategy will cause the password to be unable to match)
@@ -58,7 +49,4 @@ services:
       # 端口映射
       - 6379:6379
     volumes:
-      - ./docker/redis/data:/data:rw
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
-      - ./docker/redis/data/logs:/logs
-    command: "redis-server /usr/local/etc/redis/redis.conf --requirepass 123456  --appendonly yes"
+      - E:\docker-data\redis:/data
